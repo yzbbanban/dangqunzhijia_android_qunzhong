@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_100"
+    android:background="@color/white"
+    android:padding="@dimen/dp_10">
+
+    <ImageView
+        android:id="@+id/iv_pic"
+        android:layout_width="@dimen/dp_100"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        tools:src="@drawable/icon_default"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_18"
+            android:singleLine="true"
+            android:ellipsize="end"
+            tools:text="喜迎十九大"/>
+
+        <TextView
+            android:id="@+id/tv_area"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:ellipsize="end"
+            tools:text="党建之家"/>
+
+        <TextView
+            android:id="@+id/tv_bus_name"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            tools:text="清洗保洁店"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_15"
+        android:background="@color/line_color"/>
+
+    <ImageView
+        android:contentDescription="@string/phone"
+        android:id="@+id/iv_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/dp_15"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_phone_red"/>
+</LinearLayout>

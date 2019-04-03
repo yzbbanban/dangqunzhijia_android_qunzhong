@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ff6666</color>
+    <color name="colorPrimaryDark">#ff6666</color>
+    <color name="colorAccent">#ff6666</color>
+
+    <!-- 默认背景色 -->
+    <color name="background_color">#f5f5f5</color>
+    <color name="bg_color">#F2F2F2</color>
+    <color name="color_light_black">#5000</color>
+    <!-- title 半透明背景颜色 -->
+    <color name="color_title_bg">#CCFFFFFF</color>
+    <color name="white">#ffffff</color>
+    <color name="yellow">#FF9900</color>
+    <color name="black">#000000</color>
+    <color name="red">#ff0000</color>
+    <color name="transparent">#12000000</color>
+    <color name="text_color">#1B1B1B</color>
+    <color name="text_blue_color">#3366FF</color>
+    <color name="text_grey">#BFBFBF</color>
+    <color name="label_color">#E5004F</color>
+    <color name="color_f6">#f6f6f6</color>
+    <color name="mine_personal_bg">#ff6666</color>
+    <color name="popup_bg">#8f000000</color>
+    <color name="blue_bg">#53CCDD</color>
+    <color name="edit_text_line_default_color">#737373</color>
+    <color name="property_fee_color">#FF6666</color>
+    <color name="electricity_fee_color">#6B6B6B</color>
+</resources>

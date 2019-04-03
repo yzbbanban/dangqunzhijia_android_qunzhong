@@ -1,0 +1,5 @@
+keyAlias=haidie-tech
+keyPassword=pwd123456
+
+storeFile=D\:/JKS/staff.jks
+storePassword=pwd123456

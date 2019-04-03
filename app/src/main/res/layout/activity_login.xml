@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:contentDescription="@null"
+        android:layout_width="match_parent"
+        android:background="@drawable/icon_login_bg"
+        android:layout_height="@dimen/dp_240">
+    </ImageView>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingStart="@dimen/dp_35"
+        android:paddingEnd="@dimen/dp_35"
+        android:layout_marginTop="@dimen/dp_30"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_mobile"
+                android:hint="手机号"
+                android:maxLength="11"
+                android:textSize="@dimen/sp_12"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_password"
+                android:hint="密码"
+                android:textSize="@dimen/sp_12"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </android.support.design.widget.TextInputLayout>
+        <RelativeLayout
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_register"
+                android:text="免费注册"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_forgot_password"
+                android:text="忘记密码?"
+                android:textSize="@dimen/sp_12"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <FrameLayout
+            android:layout_marginTop="@dimen/dp_35"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_36"
+                android:background="@drawable/login_dialog"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tv_login"
+                android:text="登录"
+                android:gravity="center"
+                android:background="@drawable/login_button_bg"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_36"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

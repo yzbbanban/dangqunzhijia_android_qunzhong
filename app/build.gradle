@@ -1,0 +1,156 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.hujiang.android-aspectjx'
+static def releaseTime() {
+    return new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone("GMT+8"))
+}
+
+android {
+    compileSdkVersion  rootProject.ext.android.compileSdkVersion
+    //正式环境  线上环境地址
+    def API_RELEASE_HOST = "\"http://www.crystal-cloud.top/\""
+    //测试环境  测试环境地址
+    def API_TEST_HOST = "\"http://192.168.124.11:86/\""
+    defaultConfig {
+        applicationId "com.haidie.dangqun"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        buildConfigField("String", "API_HOST", "${API_RELEASE_HOST}")
+        ndk {
+            //根据需要 自行选择添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+        }
+        manifestPlaceholders = [
+                XG_ACCESS_ID : "2100300181",
+                XG_ACCESS_KEY: "AMD1L89P7R2J",
+        ]
+    }
+    signingConfigs {
+        release {
+            keyAlias 'haidie-tech'
+            keyPassword 'pwd123456'
+            storeFile file('/Users/YZBbanban/Downloads/android app/money/dangqunzhijia_android_qunzhong/signingfile/dangqun.jks')
+            storePassword 'pwd123456'
+        }
+        debug {
+            keyAlias 'haidie-tech'
+            keyPassword 'pwd123456'
+            storeFile file('/Users/YZBbanban/Downloads/android app/money/dangqunzhijia_android_qunzhong/signingfile/dangqun.jks')
+            storePassword 'pwd123456'
+        }
+    }
+    buildTypes {
+        release {
+            //是否输出日志
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            //url动态替换,正式url
+//            buildConfigField "String", "API_HOST", "${API_TEST_HOST}"//API test
+            buildConfigField "String", "API_HOST", "${API_RELEASE_HOST}"
+            //是否混淆
+            minifyEnabled true
+            zipAlignEnabled true
+            //是否移除无用资源
+            shrinkResources true
+            aaptOptions.cruncherEnabled = false
+            aaptOptions.useNewCruncher = false
+            //混淆的配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            //是否输出日志
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            //url动态替换
+            buildConfigField "String", "API_HOST", "${API_RELEASE_HOST}"//API test
+//            buildConfigField("String", "API_HOST", "${API_RELEASE_HOST}")
+            // 移除无用的resource文件
+            shrinkResources false
+            //是否混淆
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    //在apk文件后边生成版本号信息
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = buildType.name + "_v" + defaultConfig.versionName + "_${releaseTime()+ "_dangqun"}.apk"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    // Support库
+    implementation rootProject.ext.supportLibs
+    // 网络请求库
+    implementation rootProject.ext.networkLibs
+    // RxJava2
+    implementation rootProject.ext.rxJavaLibs
+    implementation(rootProject.ext.otherLibs) {
+        exclude group: "com.android.support"
+    }
+    // APT dependencies(Kotlin内置的注解处理器)
+    kapt rootProject.ext.annotationProcessorLibs
+    //smartRefreshLayout 下拉刷新
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5.1'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5.1'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
+    implementation 'com.yanyusong.y_divideritemdecoration:y_divideritemdecoration:2.0'
+    implementation 'com.youth.banner:banner:1.4.10'
+    //Logger
+    implementation 'com.orhanobut:logger:2.2.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    implementation 'com.just.agentweb:agentweb:4.0.2'
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
+    implementation 'com.github.XunMengWinter:CircularAnim:0.4.6'
+    implementation 'com.contrarywind:Android-PickerView:4.1.6'
+    implementation 'com.github.razerdp:BasePopup:1.8.5.1'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.1.6'
+    implementation 'com.allenliu.versionchecklib:library:2.1.9'
+    implementation 'cn.bingoogolapple:bga-qrcode-zxing:1.3.4'
+    //信鸽jar
+    implementation 'com.tencent.xinge:xinge:3.2.6-release'
+    //jg包
+    implementation 'com.tencent.jg:jg:1.1'
+    //wup包
+    implementation 'com.tencent.wup:wup:1.0.0.E-release'
+    //mid包
+    implementation 'com.tencent.mid:mid:4.0.6-release'
+    implementation 'com.yanzhenjie:permission:2.0.0-rc12'
+    implementation project(':multiple-status-view')
+}
+
+//解决支持库版本不兼容问题
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion rootProject.ext.dependVersion.androidSupportSdkVersion
+            }
+        }
+    }
+}

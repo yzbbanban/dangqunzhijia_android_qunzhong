@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="report_type">
+        <item>其他</item>
+        <item>儿童</item>
+        <item>老人</item>
+        <item>妇女</item>
+        <item>特困群众</item>
+        <item>军烈属</item>
+        <item>建档立卡户</item>
+        <item>残疾人</item>
+    </string-array>
+</resources>
