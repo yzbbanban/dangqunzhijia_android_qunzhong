@@ -26,9 +26,6 @@ import kotlinx.android.synthetic.main.activity_my_volunteer_activities_detail.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 
 
-
-
-
 /**
  * Create by   Administrator
  *      on     2018/10/22 16:15
@@ -43,12 +40,13 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
     private var isSignInOrOut = false
     private var mId: Int? = null
     private val mPresenter by lazy { VolunteerActivitiesDetailPresenter() }
+    private var voluntter_id: String? = null
     override fun getLayoutId(): Int = R.layout.activity_my_volunteer_activities_detail
 
     override fun initData() {
-        mId = intent.getIntExtra(Constants.ID,Constants.NEGATIVE_ONE)
-        isSignUp = intent.getBooleanExtra(Constants.IS_SIGN_UP,Constants.DEFAULT_FALSE)
-        isSignInOrOut = intent.getBooleanExtra(Constants.IS_SIGN_IN_OR_OUT,Constants.DEFAULT_FALSE)
+        mId = intent.getIntExtra(Constants.ID, Constants.NEGATIVE_ONE)
+        isSignUp = intent.getBooleanExtra(Constants.IS_SIGN_UP, Constants.DEFAULT_FALSE)
+        isSignInOrOut = intent.getBooleanExtra(Constants.IS_SIGN_IN_OR_OUT, Constants.DEFAULT_FALSE)
     }
 
     override fun initView() {
@@ -64,18 +62,26 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
             val intent = Intent(this@MyVolunteerActivitiesDetailActivity, VolunteersParticipateActivitiesActivity::class.java)
             intent.putExtra(Constants.ID, mId)
             startActivity(intent)
-            overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out)
+            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
         }
         tvSignUp.setOnClickListener {
             if (tvSignUp.text == "我要报名") {
                 AlertDialog.Builder(this)
                         .setTitle("是否确认报名")
-                        .setNegativeButton("取消",null)
+                        .setNegativeButton("取消", null)
                         .setPositiveButton("确认") { _, _ ->
                             // 调用报名接口
-                            mPresenter.getAddActivityData(uid,mId!!,token)
+                            mPresenter.getAddActivityData(uid, mId!!, token)
                         }.create().show()
             }
+        }
+
+        btnActivitySignIn.setOnClickListener {
+            mPresenter.getSignInOutData(uid, token, voluntter_id, "" + mId)
+        }
+
+        btnActivitySignOut.setOnClickListener {
+            mPresenter.getSignInOutData(uid, token, voluntter_id, "" + mId)
         }
 
         if (isSignInOrOut) {
@@ -83,34 +89,39 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         }
         tvSignIn.setOnClickListener {
             //调用志愿者活动签到
-            mPresenter.getVolunteerActivitiesSignInData(uid,mId!!,token)
+            mPresenter.getVolunteerActivitiesSignInData(uid, mId!!, token)
         }
 
     }
-    override fun setVolunteerActivitiesSignInData(isSuccess: Boolean, msg: String,errorCode : Int) {
+
+    override fun setVolunteerActivitiesSignInData(isSuccess: Boolean, msg: String, errorCode: Int) {
         if (isSuccess) {
             showShort("签到成功")
-        }else{
+        } else {
 //            if (code == 202){}
 //            $retData['message']="您还没报名该活动,尚不能签到";
             if (errorCode == 202) {
                 AlertDialog.Builder(this)
                         .setTitle("$msg\n是否确认报名")
-                        .setNegativeButton("取消",null)
+                        .setNegativeButton("取消", null)
                         .setPositiveButton("确认") { _, _ ->
                             // 调用报名接口
-                            mPresenter.getAddActivityData(uid,mId!!,token)
+                            mPresenter.getAddActivityData(uid, mId!!, token)
                         }.create().show()
-            }else{
+            } else {
                 showShort(if (msg.isEmpty()) "签到失败" else msg)
             }
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mPresenter.detachView()
     }
-    override fun start() { mPresenter.getVolunteerActivitiesDetailData(uid,mId!!,token) }
+
+    override fun start() {
+        mPresenter.getVolunteerActivitiesDetailData(uid, mId!!, token)
+    }
 
     private fun initWebView() {
         val webSettings = webView.settings
@@ -129,18 +140,19 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         webSettings.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
         webView.webViewClient = WebViewClient()
     }
+
     @SuppressLint("SetTextI18n")
     override fun setVolunteerActivitiesDetailData(volunteerActivitiesDetailData: VolunteerActivitiesDetailData) {
         val isJoin = volunteerActivitiesDetailData.is_join
         flowLayout.removeAllViews()
         if (isSignUp) {
-            tvSignUp.visibility  = View.VISIBLE
-            tvSignUp.text =  if (isJoin == null) "我要报名" else "已报名"
-        }else{
-            tvSignUp.visibility  = View.GONE
+            tvSignUp.visibility = View.VISIBLE
+            tvSignUp.text = if (isJoin == null) "我要报名" else "已报名"
+        } else {
+            tvSignUp.visibility = View.GONE
         }
         val pic = volunteerActivitiesDetailData.pic
-        ImageLoader.load(this,pic,ivPic)
+        ImageLoader.load(this, pic, ivPic)
         val title = volunteerActivitiesDetailData.title
         tvTitle.text = title
         val url = Constants.HTML_BODY + volunteerActivitiesDetailData.content + Constants.BODY_HTML
@@ -150,19 +162,19 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         if (group != null) {
             flowLayout.visibility = View.VISIBLE
             val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            for (index in 0 until group.size){
+            for (index in 0 until group.size) {
                 val textView = TextView(this)
                 textView.setLineSpacing(1.2f, 1.2f)
-                textView.setTextColor(ContextCompat.getColor(this,R.color.white))
+                textView.setTextColor(ContextCompat.getColor(this, R.color.white))
                 textView.setBackgroundResource(R.drawable.text_view_yellow_bg)
                 textView.setPadding(DisplayManager.dip2px(10f)!!,
                         DisplayManager.dip2px(5f)!!,
                         DisplayManager.dip2px(10f)!!,
                         DisplayManager.dip2px(5f)!!)
-                params.setMargins(DisplayManager.dip2px(10f)!!,DisplayManager.dip2px(5f)!!,
-                        0,DisplayManager.dip2px(5f)!!)
+                params.setMargins(DisplayManager.dip2px(10f)!!, DisplayManager.dip2px(5f)!!,
+                        0, DisplayManager.dip2px(5f)!!)
                 textView.layoutParams = params
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,14f)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
                 textView.text = group[index]
                 flowLayout.addView(textView)
             }
@@ -181,17 +193,17 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         val isSignIn = volunteerActivitiesDetailData.is_signin
 //        if (DateUtils.isDateOneBigger(nowTime, endTime)) {
 //            isSignOut 签退状态,0未签退,1已签退
-            if (isSignIn == 1 && isSignOut == 0){
-                tvSignOut.visibility = View.VISIBLE
-            }else{
-                tvSignOut.visibility = View.GONE
-            }
+        if (isSignIn == 1 && isSignOut == 0) {
+            tvSignOut.visibility = View.VISIBLE
+        } else {
+            tvSignOut.visibility = View.GONE
+        }
 //        }else{
-            // is_signin=0 ,表示未签到,  =1,表示已签到
-            when (isSignIn) {
-                0 -> tvSignIn.visibility = View.VISIBLE
-                else -> tvSignIn.visibility = View.GONE
-            }
+        // is_signin=0 ,表示未签到,  =1,表示已签到
+        when (isSignIn) {
+            0 -> tvSignIn.visibility = View.VISIBLE
+            else -> tvSignIn.visibility = View.GONE
+        }
 //        }
         tvSignOut.setOnClickListener {
             if (DateUtils.isDateOneBigger(endTime, nowTime)) {
@@ -200,9 +212,9 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
             }
             //跳转到志愿者活动签退页面
             val intent = Intent(this, VolunteerActivitiesSignOutActivity::class.java)
-            intent.putExtra(Constants.ID,mId)
+            intent.putExtra(Constants.ID, mId)
             startActivity(intent)
-            overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out)
+            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
         }
         val area = volunteerActivitiesDetailData.area
         val address = volunteerActivitiesDetailData.address
@@ -214,6 +226,7 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         val remark = volunteerActivitiesDetailData.remark
         tvRemark.text = remark
     }
+
     override fun showError(msg: String, errorCode: Int) {
         showShort(msg)
         when (errorCode) {
@@ -221,18 +234,19 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
             else -> mLayoutStatusView?.showError()
         }
     }
-    override fun setAddActivityData(isSuccess: Boolean, msg: String,errorCode : Int) {
+
+    override fun setAddActivityData(isSuccess: Boolean, msg: String, errorCode: Int) {
         when {
             isSuccess -> {
 //            报名成功并且刷新数据
                 showShort("报名成功")
                 start()
             }
-        //   code": 202,   "message": "当前您还没有绑定志愿者身份，点击确定前往",
+            //   code": 202,   "message": "当前您还没有绑定志愿者身份，点击确定前往",
             errorCode == 202 -> {
-                 AlertDialog.Builder(this)
+                AlertDialog.Builder(this)
                         .setTitle(msg)
-                        .setNegativeButton("取消",null)
+                        .setNegativeButton("取消", null)
                         .setPositiveButton("确定") { _, _ ->
                             //跳转到志愿者绑定页面
                             toActivity(VolunteerBindingActivity::class.java)
@@ -241,6 +255,7 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
             else -> showShort(msg)
         }
     }
+
     override fun setSignInData(isSuccess: Boolean, msg: String) {}
     override fun showLoading() {
         if (!isRefresh) {
@@ -249,5 +264,7 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         }
     }
 
-    override fun dismissLoading() { mLayoutStatusView?.showContent() }
+    override fun dismissLoading() {
+        mLayoutStatusView?.showContent()
+    }
 }

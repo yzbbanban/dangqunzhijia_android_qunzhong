@@ -21,9 +21,9 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/user/login")
-    fun getLoginData(@Field("username") username: String,@Field("group_id") group_id: String,
-                     @Field("password") password: String,@Field("device_id") device_id: String
-                     ,@Field("device_type") device_type: String): Observable<BaseResponse<RegisterData>>
+    fun getLoginData(@Field("username") username: String, @Field("group_id") group_id: String,
+                     @Field("password") password: String, @Field("device_id") device_id: String
+                     , @Field("device_type") device_type: String): Observable<BaseResponse<RegisterData>>
 
     /**
      * 退出登录
@@ -97,13 +97,14 @@ interface ApiService {
     @POST("api/receive/getHistoryList")
     fun getHistoricalBillData(@Field("uid") uid: Int, @Field("year") year: Int?, @Field("month") month: String?, @Field("page") page: Int,
                               @Field("size") size: Int, @Field("token") token: String): Observable<BaseResponse<HistoricalBillData>>
+
     /**
      * 商品分类列表
      * http://xx.com/api/shop_goods/get_catalog_list
      */
     @FormUrlEncoded
     @POST("api/shop_goods/get_catalog_list")
-    fun getCommodityClassificationListData(@Field("user_id") uid: Int,@Field("token") token: String):
+    fun getCommodityClassificationListData(@Field("user_id") uid: Int, @Field("token") token: String):
             Observable<BaseResponse<ArrayList<CommodityClassificationListData>>>
 
     /**
@@ -145,7 +146,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/fix_order/get_house_list")
-    fun getHouseListData(@Field("uid") uid: Int,@Field("token") token: String,@Field("title") title: String,
+    fun getHouseListData(@Field("uid") uid: Int, @Field("token") token: String, @Field("title") title: String,
                          @Field("unit") unit: String): Observable<BaseResponse<ArrayList<HouseListData>>>
 
     /**
@@ -189,8 +190,8 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/user/register")
-    fun getRegisterData(@Field("mobile") mobile: String,@Field("nickname") nickname: String?,@Field("group_id") group_id: Int?,
-                        @Field("password") password: String,@Field("captcha") captcha: String): Observable<BaseResponse<RegisterData>>
+    fun getRegisterData(@Field("mobile") mobile: String, @Field("nickname") nickname: String?, @Field("group_id") group_id: Int?,
+                        @Field("password") password: String, @Field("captcha") captcha: String): Observable<BaseResponse<RegisterData>>
 
     /**
      * 获取家政服务分类接口
@@ -224,7 +225,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/workorder/getOrderInfo")
-    fun getOrderInfoData(@Field("uid") uid: Int,@Field("id") id: Int, @Field("token") token: String): Observable<BaseResponse<OrderInfoData>>
+    fun getOrderInfoData(@Field("uid") uid: Int, @Field("id") id: Int, @Field("token") token: String): Observable<BaseResponse<OrderInfoData>>
 
     /**
      * 物业工单管理-获取工单回复历史记录接口
@@ -232,7 +233,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/workorder/getHistoryReplay")
-    fun getHistoryReplayData(@Field("uid") uid: Int, @Field("id") id: Int,@Field("page") page: Int, @Field("size") size: Int,
+    fun getHistoryReplayData(@Field("uid") uid: Int, @Field("id") id: Int, @Field("page") page: Int, @Field("size") size: Int,
                              @Field("token") token: String): Observable<BaseResponse<HistoryReplayData>>
 
     /**
@@ -395,7 +396,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/activity/getMyVolunteerList")
-    fun getMyVolunteerActivitiesListData(@Field("uid") uid: Int, @Field("token") token: String,  @Field("page") page: Int,@Field("size") size: Int)
+    fun getMyVolunteerActivitiesListData(@Field("uid") uid: Int, @Field("token") token: String, @Field("page") page: Int, @Field("size") size: Int)
             : Observable<BaseResponse<MyVolunteerActivitiesListData>>
 
     /**
@@ -416,6 +417,18 @@ interface ApiService {
     fun getVolunteerActivitiesSignInData(@Field("uid") uid: Int, @Field("id") id: Int, @Field("token") token: String): Observable<BaseResponse<Boolean>>
 
     /**
+     * 志愿者活动签到签退
+     * http://www.xxx.com/api/Volunteer_Record_Log/ign_in_and_out
+     * */
+    @FormUrlEncoded
+    @POST("api/Volunteer_Record_Log/ign_in_and_out")
+    fun getVolunteerSignInOut(@Field("user_id") user_id: Int,
+                              @Field("token") token: String,
+                              @Field("voluntter_id") voluntter_id: String,
+                              @Field("activity_id") activity_id: String
+    ): Observable<BaseResponse<Boolean>>
+
+    /**
      * 智慧新风-获取志愿者参加活动人员列表接口
      * http://192.168.3.3/dangqun_backend_mayun/public/api/activity/getMember
      */
@@ -430,7 +443,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/activity/addActivity")
-    fun getAddActivityData(@Field("uid") uid: Int,@Field("id") id: Int,@Field("token") token: String): Observable<BaseResponse<Boolean>>
+    fun getAddActivityData(@Field("uid") uid: Int, @Field("id") id: Int, @Field("token") token: String): Observable<BaseResponse<Boolean>>
 
     /**
      * 志愿者活动签到打卡功能
@@ -448,13 +461,14 @@ interface ApiService {
     @POST("api/activity/signout")
     fun getVolunteerActivitiesSignOutData(@Part("uid") uid: RequestBody, @Part("id") id: RequestBody, @Part("token") token: RequestBody,
                                           @Part("content") content: RequestBody, @Part part: MultipartBody.Part): Observable<BaseResponse<Boolean>>
+
     /**
      * 智慧新风-获取志愿者组织列表接口
      * http://192.168.3.3/dangqun_backend_mayun/public/api/volunteer/getGroupList
      */
     @FormUrlEncoded
     @POST("api/volunteer/getGroupList")
-    fun getVoluntaryOrganizationListData( @Field("uid") uid: Int, @Field("page") page: Int, @Field("size") size: Int, @Field("token") token: String)
+    fun getVoluntaryOrganizationListData(@Field("uid") uid: Int, @Field("page") page: Int, @Field("size") size: Int, @Field("token") token: String)
             : Observable<BaseResponse<VoluntaryOrganizationListData>>
 
     /**
@@ -496,7 +510,7 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("api/volunteer/getInfo")
-    fun getVolunteerDetailData( @Field("uid") uid: Int, @Field("id") id: Int, @Field("token") token: String): Observable<BaseResponse<VolunteerDetailData>>
+    fun getVolunteerDetailData(@Field("uid") uid: Int, @Field("id") id: Int, @Field("token") token: String): Observable<BaseResponse<VolunteerDetailData>>
 
     /**
      * 智慧新风-设为/取消管理员接口
@@ -576,6 +590,7 @@ interface ApiService {
     @POST("api/helps/re_del")
     fun getOnlineHelpDeleteData(@Field("uid") uid: Int, @Field("token") token: String, @Field("id") id: Int,
                                 @Field("status") status: Int): Observable<BaseResponse<Boolean>>
+
     /**
      * 网上求助表单提交接口
      * http://192.168.124.9/dangqunzhijia_web/public/api/Helps/create
@@ -603,6 +618,7 @@ interface ApiService {
                           @Part("content") content: RequestBody, @Part("pic1") pic1: RequestBody?, @Part("pic2") pic2: RequestBody?,
                           @Part("pic3") pic3: RequestBody?, @Part part1: MultipartBody.Part?, @Part part2: MultipartBody.Part?,
                           @Part part3: MultipartBody.Part?): Observable<BaseResponse<Boolean>>
+
     /**
      * 获取网上求助详情接口
      * http://192.168.124.9/dangqunzhijia_web/public/api/Helps/getOrderInfo
@@ -764,7 +780,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("api/toutiao_article/article_list")
     fun getFreshAirActivitiesData(@Field("user_id") user_id: Int, @Field("token") token: String,
-                                  @Field("page") page: Int, @Field("size") size: Int,@Field("module_type") module_type: Int,
+                                  @Field("page") page: Int, @Field("size") size: Int, @Field("module_type") module_type: Int,
                                   @Field("is_register_copy") is_register_copy: Int): Observable<BaseResponse<FreshAirActivitiesData>>
 
     /**
@@ -774,7 +790,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("api/toutiao_article/detail")
     fun getFreshAirActivitiesDetailData(@Field("user_id") user_id: Int, @Field("token") token: String,
-                                  @Field("article_id") article_id: Int): Observable<BaseResponse<FreshAirActivitiesDetailData>>
+                                        @Field("article_id") article_id: Int): Observable<BaseResponse<FreshAirActivitiesDetailData>>
 
     /**
      * 智慧关爱-获取四点半课堂记录列表接口

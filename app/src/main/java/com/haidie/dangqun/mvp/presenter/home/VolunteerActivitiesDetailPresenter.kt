@@ -14,7 +14,7 @@ import com.haidie.dangqun.rx.RxUtils
  *      on     2018/09/11 13:27
  * description
  */
-class VolunteerActivitiesDetailPresenter : BasePresenter<VolunteerActivitiesDetailContract.View>(),VolunteerActivitiesDetailContract.Presenter{
+class VolunteerActivitiesDetailPresenter : BasePresenter<VolunteerActivitiesDetailContract.View>(), VolunteerActivitiesDetailContract.Presenter {
 
     private val volunteerActivitiesDetailModel by lazy { VolunteerActivitiesDetailModel() }
     override fun getVolunteerActivitiesDetailData(uid: Int, id: Int, token: String) {
@@ -22,60 +22,82 @@ class VolunteerActivitiesDetailPresenter : BasePresenter<VolunteerActivitiesDeta
         mRootView!!.showLoading()
         val disposable = volunteerActivitiesDetailModel.getVolunteerActivitiesDetailData(uid, id, token)
                 .compose(RxUtils.handleResult())
-                .subscribeWith(object : BaseObserver<List<VolunteerActivitiesDetailData>>("获取志愿者活动详情失败"){
+                .subscribeWith(object : BaseObserver<List<VolunteerActivitiesDetailData>>("获取志愿者活动详情失败") {
                     override fun onNext(t: List<VolunteerActivitiesDetailData>) {
                         mRootView!!.apply {
                             dismissLoading()
                             setVolunteerActivitiesDetailData(t[0])
                         }
                     }
+
                     override fun onFail(e: ApiException) {
                         mRootView!!.apply {
                             dismissLoading()
-                            showError(e.mMessage,e.errorCode)
+                            showError(e.mMessage, e.errorCode)
                         }
                     }
                 })
         addSubscription(disposable)
     }
+
     override fun getAddActivityData(uid: Int, id: Int, token: String) {
         val disposable = volunteerActivitiesDetailModel.getAddActivityData(uid, id, token)
                 .compose(RxUtils.handleResult())
-                .subscribeWith(object : BaseObserver<Boolean>("报名失败"){
+                .subscribeWith(object : BaseObserver<Boolean>("报名失败") {
                     override fun onNext(t: Boolean) {
-                        mRootView!!.setAddActivityData(t,"", ApiErrorCode.SUCCESS)
+                        mRootView!!.setAddActivityData(t, "", ApiErrorCode.SUCCESS)
                     }
+
                     override fun onFail(e: ApiException) {
-                        mRootView!!.setAddActivityData(false,e.mMessage,e.errorCode)
+                        mRootView!!.setAddActivityData(false, e.mMessage, e.errorCode)
                     }
                 })
         addSubscription(disposable)
     }
+
     override fun getSignInData(uid: Int, id: Int, token: String) {
         val disposable = volunteerActivitiesDetailModel.getSignInData(uid, id, token)
                 .compose(RxUtils.handleResult())
-                .subscribeWith(object : BaseObserver<Boolean>("签到失败"){
+                .subscribeWith(object : BaseObserver<Boolean>("签到失败") {
                     override fun onNext(t: Boolean) {
-                        mRootView!!.setSignInData(t,"")
+                        mRootView!!.setSignInData(t, "")
                     }
+
                     override fun onFail(e: ApiException) {
-                        mRootView!!.setSignInData(false,e.mMessage)
+                        mRootView!!.setSignInData(false, e.mMessage)
                     }
                 })
         addSubscription(disposable)
     }
+
     override fun getVolunteerActivitiesSignInData(uid: Int, id: Int, token: String) {
         val disposable = volunteerActivitiesDetailModel.getVolunteerActivitiesSignInData(uid, id, token)
                 .compose(RxUtils.handleResult())
                 .subscribeWith(object : BaseObserver<Boolean>("签到失败") {
                     override fun onNext(t: Boolean) {
-                        mRootView?.setVolunteerActivitiesSignInData(t, "",ApiErrorCode.SUCCESS)
+                        mRootView?.setVolunteerActivitiesSignInData(t, "", ApiErrorCode.SUCCESS)
                     }
 
                     override fun onFail(e: ApiException) {
-                        mRootView?.setVolunteerActivitiesSignInData(false, e.mMessage,e.errorCode)
+                        mRootView?.setVolunteerActivitiesSignInData(false, e.mMessage, e.errorCode)
                     }
                 })
         addSubscription(disposable)
     }
+
+    override fun getSignInOutData(user_id: Int, token: String, voluntter_id: String, activity_id: String) {
+        val disposable = volunteerActivitiesDetailModel.getSignInOutData(user_id, token, voluntter_id, activity_id)
+                .compose(RxUtils.handleResult())
+                .subscribeWith(object : BaseObserver<Boolean>("操作失败") {
+                    override fun onNext(t: Boolean) {
+                        mRootView?.setVolunteerActivitiesSignInData(t, "", ApiErrorCode.SUCCESS)
+                    }
+
+                    override fun onFail(e: ApiException) {
+                        mRootView?.setVolunteerActivitiesSignInData(false, e.mMessage, e.errorCode)
+                    }
+                })
+        addSubscription(disposable)
+    }
+
 }

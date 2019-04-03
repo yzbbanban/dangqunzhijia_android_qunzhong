@@ -12,23 +12,31 @@ import io.reactivex.Observable
  * description
  */
 class VolunteerActivitiesDetailModel {
-    fun getVolunteerActivitiesDetailData( uid: Int,  id: Int, token: String): Observable<BaseResponse<List<VolunteerActivitiesDetailData>>>{
+    fun getVolunteerActivitiesDetailData(uid: Int, id: Int, token: String): Observable<BaseResponse<List<VolunteerActivitiesDetailData>>> {
         return RetrofitManager.service.getVolunteerActivitiesDetailData(uid, id, token)
                 .compose(SchedulerUtils.ioToMain())
     }
 
-    fun getAddActivityData( uid: Int, id: Int, token: String): Observable<BaseResponse<Boolean>>{
+    fun getAddActivityData(uid: Int, id: Int, token: String): Observable<BaseResponse<Boolean>> {
         return RetrofitManager.service.getAddActivityData(uid, id, token)
                 .compose(SchedulerUtils.ioToMain())
     }
 
-    fun getSignInData( uid: Int,  id: Int,  token: String): Observable<BaseResponse<Boolean>>{
+    fun getSignInData(uid: Int, id: Int, token: String): Observable<BaseResponse<Boolean>> {
         return RetrofitManager.service.getSignInData(uid, id, token)
                 .compose(SchedulerUtils.ioToMain())
     }
 
-    fun getVolunteerActivitiesSignInData( uid: Int,  id: Int,  token: String): Observable<BaseResponse<Boolean>>{
+    fun getVolunteerActivitiesSignInData(uid: Int, id: Int, token: String): Observable<BaseResponse<Boolean>> {
         return RetrofitManager.service.getVolunteerActivitiesSignInData(uid, id, token)
+                .compose(SchedulerUtils.ioToMain())
+    }
+
+    fun getSignInOutData(user_id: Int,
+                         token: String,
+                         voluntter_id: String,
+                         activity_id: String): Observable<BaseResponse<Boolean>> {
+        return RetrofitManager.service.getVolunteerSignInOut(user_id, token, voluntter_id, activity_id)
                 .compose(SchedulerUtils.ioToMain())
     }
 }
