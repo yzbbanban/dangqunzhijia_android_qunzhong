@@ -310,18 +310,18 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/login_button_bg"
-                        android:text="活动签到"
+                        android:text="活动签到/签退"
                         android:textColor="@color/white" />
 
-                    <Button
-                        android:id="@+id/btnActivitySignOut"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/login_button_bg"
-                        android:text="活动签退"
-                        android:textColor="@color/white" />
+                    <!--<Button-->
+                        <!--android:id="@+id/btnActivitySignOut"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="20dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:background="@drawable/login_button_bg"-->
+                        <!--android:text="活动签退"-->
+                        <!--android:textColor="@color/white" />-->
                 </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

@@ -32,7 +32,7 @@ class VolunteerActivitiesDetailContract {
 
         fun getSignInOutData(user_id: Int,
                              token: String,
-                             voluntter_id: String,
+                             volunteer_id: String,
                              activity_id: String)
     }
 }

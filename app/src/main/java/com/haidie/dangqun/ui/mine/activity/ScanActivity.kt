@@ -23,12 +23,16 @@ class ScanActivity : BaseActivity(), QRCodeView.Delegate {
 
     private lateinit var mZXingView: ZXingView
     override fun getLayoutId(): Int = R.layout.activity_scan
+    private var isSignUp = false
+    private var isSignInOrOut = false
 
     override fun initData() {}
 
     override fun initView() {
         mZXingView = zxingview
         mZXingView.setDelegate(this)
+        isSignUp = intent.getBooleanExtra(Constants.IS_SIGN_UP, Constants.DEFAULT_FALSE)
+        isSignInOrOut = intent.getBooleanExtra(Constants.IS_SIGN_IN_OR_OUT, Constants.DEFAULT_FALSE)
     }
 
     override fun onStart() {
@@ -47,21 +51,35 @@ class ScanActivity : BaseActivity(), QRCodeView.Delegate {
         mZXingView.onDestroy() // 销毁二维码扫描控件
         super.onDestroy()
     }
+
     override fun start() {}
 
     override fun onScanQRCodeSuccess(result: String?) {
-        if (!result?.contains("www.dqzj.com")!! && !result.contains(UrlConstant.BASE_URL_HOST.split("//")[1])){
-            showShort("二维码错误")
-            return
-        }
-        val split = result.split("?")
-        val ids = split[1].split("=".toRegex())
         val intent = Intent(this@ScanActivity, MyVolunteerActivitiesDetailActivity::class.java)
-        intent.putExtra(Constants.ID, ids[1].toInt())
-        intent.putExtra(Constants.IS_SIGN_UP,false)
-        intent.putExtra(Constants.IS_SIGN_IN_OR_OUT,true)
+
+        if (!result?.contains("www.dqzj.com")!! && !result.contains(UrlConstant.BASE_URL_HOST.split("//")[1])) {
+            //活动扫描二维码签名
+            if ("".equals(result)) {
+                showShort("二维码错误")
+                return
+            } else {
+                intent.putExtra(Constants.ACTIVITY_PERSONAL_UID, result)
+                intent.putExtra(Constants.IS_SIGN_UP, isSignUp)
+                intent.putExtra(Constants.IS_SIGN_IN_OR_OUT, isSignInOrOut)
+                intent.putExtra(Constants.ACTIVITY_TYPE, 2)
+            }
+        } else {
+            //正常报名
+            val split = result.split("?")
+            val ids = split[1].split("=".toRegex())
+            intent.putExtra(Constants.ID, ids[1].toInt())
+            intent.putExtra(Constants.IS_SIGN_UP, false)
+            intent.putExtra(Constants.IS_SIGN_IN_OR_OUT, true)
+            intent.putExtra(Constants.ACTIVITY_TYPE, 1)
+        }
+
         startActivity(intent)
-        overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out)
+        overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
         finish()
         vibrate()
 
@@ -76,6 +94,7 @@ class ScanActivity : BaseActivity(), QRCodeView.Delegate {
             vibrator.vibrate(200)
         }
     }
+
     override fun onCameraAmbientBrightnessChanged(isDark: Boolean) {
         // 这里是通过修改提示文案来展示环境是否过暗的状态，接入方也可以根据 isDark 的值来实现其他交互效果
         var tipText = mZXingView.scanBoxView.tipText

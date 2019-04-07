@@ -34,9 +34,9 @@ class VolunteerActivitiesDetailModel {
 
     fun getSignInOutData(user_id: Int,
                          token: String,
-                         voluntter_id: String,
-                         activity_id: String): Observable<BaseResponse<Boolean>> {
-        return RetrofitManager.service.getVolunteerSignInOut(user_id, token, voluntter_id, activity_id)
+                         volunteer_id: String,
+                         activity_id: String): Observable<BaseResponse<String>> {
+        return RetrofitManager.service.getVolunteerSignInOut(user_id, token, volunteer_id, activity_id)
                 .compose(SchedulerUtils.ioToMain())
     }
 }

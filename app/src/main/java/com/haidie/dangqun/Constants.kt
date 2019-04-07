@@ -41,6 +41,8 @@ object Constants {
     const val PAGE = 1
     const val SIZE = 10
     const val ID = "id"
+    const val ACTIVITY_PERSONAL_UID = "activity_personal_uid"
+    const val ACTIVITY_TYPE = "activity_type"
 //    类型
     const val TYPE = "type"
 

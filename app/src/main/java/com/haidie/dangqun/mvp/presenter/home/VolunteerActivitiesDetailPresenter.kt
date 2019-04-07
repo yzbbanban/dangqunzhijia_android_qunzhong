@@ -85,12 +85,12 @@ class VolunteerActivitiesDetailPresenter : BasePresenter<VolunteerActivitiesDeta
         addSubscription(disposable)
     }
 
-    override fun getSignInOutData(user_id: Int, token: String, voluntter_id: String, activity_id: String) {
-        val disposable = volunteerActivitiesDetailModel.getSignInOutData(user_id, token, voluntter_id, activity_id)
+    override fun getSignInOutData(user_id: Int, token: String, volunteer_id: String, activity_id: String) {
+        val disposable = volunteerActivitiesDetailModel.getSignInOutData(user_id, token, volunteer_id, activity_id)
                 .compose(RxUtils.handleResult())
-                .subscribeWith(object : BaseObserver<Boolean>("操作失败") {
-                    override fun onNext(t: Boolean) {
-                        mRootView?.setVolunteerActivitiesSignInData(t, "", ApiErrorCode.SUCCESS)
+                .subscribeWith(object : BaseObserver<String>("操作失败") {
+                    override fun onNext(t: String) {
+                        mRootView?.setVolunteerActivitiesSignInData(true, t, ApiErrorCode.SUCCESS)
                     }
 
                     override fun onFail(e: ApiException) {

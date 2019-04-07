@@ -55,16 +55,20 @@ class LifeDetailActivity : BaseActivity() {
         postData = URLEncoder.encode(token,Constants.UTF_8)
     }
     override fun initView() {
-        AgentWebConfig.syncCookie(UrlConstant.BASE_URL_HOST + url,"${Constants.UID}=$uid")
-        AgentWebConfig.syncCookie(UrlConstant.BASE_URL_HOST + url,"${Constants.TOKEN}=$token")
-        mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(frame_layout_life_detail, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT))
-                .useDefaultIndicator(ContextCompat.getColor(this,R.color.colorPrimary))
-                .setMainFrameErrorView(R.layout.error_view, Constants.NEGATIVE_ONE)
-                .createAgentWeb()
-                .ready()
-                .go(UrlConstant.BASE_URL_HOST + url)
-        mAgentWeb!!.jsInterfaceHolder.addJavaObject(Constants.ANDROID, AndroidLifeDetailInterface(this))
+        try {
+            AgentWebConfig.syncCookie(UrlConstant.BASE_URL_HOST + url,"${Constants.UID}=$uid")
+            AgentWebConfig.syncCookie(UrlConstant.BASE_URL_HOST + url,"${Constants.TOKEN}=$token")
+            mAgentWeb = AgentWeb.with(this)
+                    .setAgentWebParent(frame_layout_life_detail, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT))
+                    .useDefaultIndicator(ContextCompat.getColor(this,R.color.colorPrimary))
+                    .setMainFrameErrorView(R.layout.error_view, Constants.NEGATIVE_ONE)
+                    .createAgentWeb()
+                    .ready()
+                    .go(UrlConstant.BASE_URL_HOST + url)
+            mAgentWeb!!.jsInterfaceHolder.addJavaObject(Constants.ANDROID, AndroidLifeDetailInterface(this))
+        }catch (e:Exception){
+
+        }
     }
     override fun start() {}
     fun goToPersonalInformationArticle(url: String){

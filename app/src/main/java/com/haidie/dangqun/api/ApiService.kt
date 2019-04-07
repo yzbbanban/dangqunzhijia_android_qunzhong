@@ -418,15 +418,15 @@ interface ApiService {
 
     /**
      * 志愿者活动签到签退
-     * http://www.xxx.com/api/Volunteer_Record_Log/ign_in_and_out
+     * http://www.xxx.com/api/Volunteer_Record_Log/sign_in_and_out
      * */
     @FormUrlEncoded
-    @POST("api/Volunteer_Record_Log/ign_in_and_out")
+    @POST("api/Volunteer_Record_Log/sign_in_and_out")
     fun getVolunteerSignInOut(@Field("user_id") user_id: Int,
                               @Field("token") token: String,
-                              @Field("voluntter_id") voluntter_id: String,
+                              @Field("volunteer_id") volunteer_id: String,
                               @Field("activity_id") activity_id: String
-    ): Observable<BaseResponse<Boolean>>
+    ): Observable<BaseResponse<String>>
 
     /**
      * 智慧新风-获取志愿者参加活动人员列表接口

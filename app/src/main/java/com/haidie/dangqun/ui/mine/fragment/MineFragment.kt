@@ -43,7 +43,7 @@ class MineFragment : BaseFragment() , MineContract.View{
     private var mineAdapter : MineAdapter? = null
     private var mTitle: String? = null
     private var isRefresh = false
-//    private var ivScan: ImageView? = null
+    private var ivScan: ImageView? = null
     private var mIvPhoto: ImageView? = null
     private var tvNickName: TextView? = null
     private var collection: TextView? = null
@@ -111,16 +111,16 @@ class MineFragment : BaseFragment() , MineContract.View{
         collection?.text = count.collection.toString()
         attention?.text = count.attention.toString()
         fans?.text = count.fans.toString()
-//        ivScan?.setOnClickListener { _ ->
-//            AndPermission.with(this)
-//                    .runtime()
-//                    .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
-//                    .rationale(RuntimeRationale())
-//                    //跳转到二维码页面
-//                    .onGranted { startActivity(Intent(activity, ScanActivity::class.java)) }
-//                    .onDenied { permissions -> showSettingDialog(activity, permissions) }
-//                    .start()
-//        }
+        ivScan?.setOnClickListener { _ ->
+            AndPermission.with(this)
+                    .runtime()
+                    .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
+                    .rationale(RuntimeRationale())
+                    //跳转到二维码页面
+                    .onGranted { startActivity(Intent(activity, ScanActivity::class.java)) }
+                    .onDenied { permissions -> showSettingDialog(activity, permissions) }
+                    .start()
+        }
         ivEdit?.setOnClickListener {
             //跳转到修改个人信息页面
             val intent = Intent(activity, ModifyInformationActivity::class.java)

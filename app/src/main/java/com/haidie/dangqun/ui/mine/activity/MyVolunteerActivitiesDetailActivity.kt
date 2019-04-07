@@ -1,9 +1,11 @@
 package com.haidie.dangqun.ui.mine.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.View
 import android.webkit.WebSettings
@@ -11,6 +13,7 @@ import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.haidie.dangqun.Constants
+import com.haidie.dangqun.MyApplication
 import com.haidie.dangqun.R
 import com.haidie.dangqun.base.BaseActivity
 import com.haidie.dangqun.mvp.contract.home.VolunteerActivitiesDetailContract
@@ -18,10 +21,10 @@ import com.haidie.dangqun.mvp.model.bean.VolunteerActivitiesDetailData
 import com.haidie.dangqun.mvp.presenter.home.VolunteerActivitiesDetailPresenter
 import com.haidie.dangqun.net.exception.ApiErrorCode
 import com.haidie.dangqun.ui.home.activity.VolunteersParticipateActivitiesActivity
-import com.haidie.dangqun.utils.DateUtils
-import com.haidie.dangqun.utils.DisplayManager
-import com.haidie.dangqun.utils.ImageLoader
-import com.haidie.dangqun.utils.Preference
+import com.haidie.dangqun.ui.main.view.RuntimeRationale
+import com.haidie.dangqun.utils.*
+import com.yanzhenjie.permission.Permission
+import com.yanzhenjie.permission.AndPermission
 import kotlinx.android.synthetic.main.activity_my_volunteer_activities_detail.*
 import kotlinx.android.synthetic.main.common_toolbar.*
 
@@ -39,14 +42,24 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
     private var isSignUp = false
     private var isSignInOrOut = false
     private var mId: Int? = null
+    private var activityType: Int? = null
     private val mPresenter by lazy { VolunteerActivitiesDetailPresenter() }
-    private var voluntter_id: String? = null
+    private var volunteer_id: String? = null
     override fun getLayoutId(): Int = R.layout.activity_my_volunteer_activities_detail
 
     override fun initData() {
-        mId = intent.getIntExtra(Constants.ID, Constants.NEGATIVE_ONE)
+
         isSignUp = intent.getBooleanExtra(Constants.IS_SIGN_UP, Constants.DEFAULT_FALSE)
         isSignInOrOut = intent.getBooleanExtra(Constants.IS_SIGN_IN_OR_OUT, Constants.DEFAULT_FALSE)
+        volunteer_id = intent.getStringExtra(Constants.ACTIVITY_PERSONAL_UID)
+        activityType = intent.getIntExtra(Constants.ACTIVITY_TYPE, 0)
+        if (activityType == 0) {
+            mId = intent.getIntExtra(Constants.ID, Constants.NEGATIVE_ONE)
+            MyApplication.mId = this.mId!!
+        }
+        if (0 != MyApplication.mId) {
+            mId = MyApplication.mId
+        }
     }
 
     override fun initView() {
@@ -54,6 +67,13 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         iv_back.visibility = View.VISIBLE
         iv_back.setOnClickListener { onBackPressed() }
         tv_title.text = "活动详情"
+
+        if (activityType != 0) {
+            println("====>uid" + uid + "token" + token + " volunteer_id" + volunteer_id + " mId" + MyApplication.mId)
+
+            mPresenter.getSignInOutData(uid, token, "" + volunteer_id, "" + MyApplication.mId)
+
+        }
 
         initWebView()
         mLayoutStatusView = multipleStatusView
@@ -77,12 +97,20 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         }
 
         btnActivitySignIn.setOnClickListener {
-            mPresenter.getSignInOutData(uid, token, voluntter_id, "" + mId)
+
+            //开启相机回调
+            startCamera()
+            finish()
+
         }
 
-        btnActivitySignOut.setOnClickListener {
-            mPresenter.getSignInOutData(uid, token, voluntter_id, "" + mId)
-        }
+//        btnActivitySignOut.setOnClickListener {
+//
+//            //开启相机回调
+//            startCamera()
+//            finish()
+//
+//        }
 
         if (isSignInOrOut) {
             rlSignInOrOut.visibility = View.VISIBLE
@@ -94,9 +122,25 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
 
     }
 
+    private fun startCamera() {
+        var intent = Intent(this@MyVolunteerActivitiesDetailActivity, ScanActivity::class.java)
+        intent.putExtra(Constants.IS_SIGN_UP, isSignUp)
+        intent.putExtra(Constants.IS_SIGN_IN_OR_OUT, isSignInOrOut)
+        AndPermission.with(this)
+                .runtime()
+                .permission(Permission.CAMERA, Permission.READ_EXTERNAL_STORAGE)
+                .rationale(RuntimeRationale())
+                //跳转到二维码页面
+                .onGranted { startActivity(intent) }
+                .onDenied { permissions -> showSettingDialog(this@MyVolunteerActivitiesDetailActivity, permissions) }
+                .start()
+    }
+
+
     override fun setVolunteerActivitiesSignInData(isSuccess: Boolean, msg: String, errorCode: Int) {
+        println("====>isSuccess " + isSuccess + " msg " + msg + " errorCode " + errorCode)
         if (isSuccess) {
-            showShort("签到成功")
+            showShort(msg)
         } else {
 //            if (code == 202){}
 //            $retData['message']="您还没报名该活动,尚不能签到";
@@ -197,6 +241,7 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
             tvSignOut.visibility = View.VISIBLE
         } else {
             tvSignOut.visibility = View.GONE
+            llSign.visibility = View.VISIBLE
         }
 //        }else{
         // is_signin=0 ,表示未签到,  =1,表示已签到
@@ -262,6 +307,25 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
             isRefresh = false
             mLayoutStatusView?.showLoading()
         }
+    }
+
+    private fun showSettingDialog(context: Context, permissions: List<String>) {
+        val permissionNames = Permission.transformText(context, permissions)
+        val message = context.getString(R.string.message_permission_always_failed, TextUtils.join("\n", permissionNames))
+        AlertDialog.Builder(context)
+                .setCancelable(false)
+                .setTitle(R.string.title_dialog)
+                .setMessage(message)
+                .setPositiveButton(R.string.setting) { _, _ -> setPermission() }
+                .setNegativeButton(R.string.cancel) { _, _ -> }
+                .show()
+    }
+
+    private fun setPermission() {
+        AndPermission.with(this@MyVolunteerActivitiesDetailActivity)
+                .runtime()
+                .setting()
+                .start()
     }
 
     override fun dismissLoading() {

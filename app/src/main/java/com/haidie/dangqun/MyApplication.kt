@@ -28,20 +28,24 @@ class MyApplication : Application() {
                 MaterialHeader(context).setShowBezierWave(true)
             }
         }
+
         private const val TAG = "MyApplication"
+        var mId = 0
+
         var context: Context by Delegates.notNull()
             private set
     }
+
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         MultiDex.install(this)
     }
+
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
         initConfig()
-
         DisplayManager.init(this)
         registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks)
     }
@@ -51,26 +55,28 @@ class MyApplication : Application() {
         val formatStrategy = PrettyFormatStrategy.newBuilder()
                 .tag(Constants.OK_HTTP)
                 .build()
-        Logger.addLogAdapter(object : AndroidLogAdapter(formatStrategy){
+        Logger.addLogAdapter(object : AndroidLogAdapter(formatStrategy) {
             override fun isLoggable(priority: Int, tag: String?): Boolean {
                 return BuildConfig.DEBUG  //如果是Debug  模式 ；打印日志
             }
         })
     }
 
-    private val mActivityLifecycleCallbacks = object : Application.ActivityLifecycleCallbacks{
+    private val mActivityLifecycleCallbacks = object : Application.ActivityLifecycleCallbacks {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-            Logger.d(TAG,"onCreated:" + activity.componentName.className)
+            Logger.d(TAG, "onCreated:" + activity.componentName.className)
         }
+
         override fun onActivityStarted(activity: Activity) {
-            Logger.d(TAG,"onStart:" + activity.componentName.className)
+            Logger.d(TAG, "onStart:" + activity.componentName.className)
         }
+
         override fun onActivityResumed(activity: Activity?) {}
         override fun onActivityPaused(activity: Activity?) {}
         override fun onActivityStopped(activity: Activity?) {}
         override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {}
         override fun onActivityDestroyed(activity: Activity) {
-            Logger.d(TAG,"onDestroyed:" + activity.componentName.className)
+            Logger.d(TAG, "onDestroyed:" + activity.componentName.className)
         }
     }
 }
