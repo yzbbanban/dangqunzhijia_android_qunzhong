@@ -250,6 +250,12 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
             else -> tvSignIn.visibility = View.GONE
         }
 //        }
+
+        if (("" + uid).equals(volunteerActivitiesDetailData.author_id)) {
+            llSign.visibility = View.VISIBLE
+        } else {
+            llSign.visibility = View.GONE
+        }
         tvSignOut.setOnClickListener {
             if (DateUtils.isDateOneBigger(endTime, nowTime)) {
                 showShort("活动未结束，暂时无法签退")
