@@ -251,7 +251,7 @@ class MyVolunteerActivitiesDetailActivity : BaseActivity(), VolunteerActivitiesD
         }
 //        }
 
-        if (("" + uid).equals(volunteerActivitiesDetailData.author_id)) {
+        if (("" + uid).equals(volunteerActivitiesDetailData.author_uid)) {
             llSign.visibility = View.VISIBLE
         } else {
             llSign.visibility = View.GONE

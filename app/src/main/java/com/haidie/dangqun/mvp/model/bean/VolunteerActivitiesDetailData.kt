@@ -26,6 +26,7 @@ data class VolunteerActivitiesDetailData (
         val is_limit: Int,
         val groupid: String,
         val author_id: String,
+        val author_uid: String,
         val remark: String,
         val is_join: String?,
         val group: Array<String>?,
